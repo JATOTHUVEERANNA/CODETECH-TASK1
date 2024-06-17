@@ -1,0 +1,176 @@
+This project is a simple and user-friendly To-Do List application designed to help users manage their daily tasks efficiently. Users can add new tasks, delete completed tasks, and view their tasks in a clean and intuitive interface.
+The application ensures that tasks are saved in the local storage,
+so they persist even after the browser is closed or refreshed.
+
+Features
+Add Tasks: Easily add new tasks to the list by entering the task description and clicking the "Add Task" button.
+Delete Tasks: Remove tasks from the list once they are completed by clicking the "Delete" button.
+Persistent Storage: Tasks are stored in the local storage, ensuring that they remain even after the page is refreshed or the browser is closed.
+Responsive Design: The application is designed to be fully responsive and works well on both desktop and mobile devices.
+
+
+Technologies Used::
+HTML: Provides the structure of the application.
+CSS: Styles the application to give it a modern and clean look.
+JavaScript: Adds functionality for adding, deleting, and storing tasks.
+
+###HTML CODE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Add a new task">
+            <button id="addTaskBtn">Add Task</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+###CSS CODE
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.input-group {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+}
+
+button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+li .delete-btn:hover {
+    background-color: #c82333;
+}
+
+
+###JAVASCRIPT CODE
+document.addEventListener('DOMContentLoaded', () => {
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+
+    // Load tasks from local storage
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // Function to render tasks
+    function renderTasks() {
+        taskList.innerHTML = '';
+        tasks.forEach((task, index) => {
+            const li = document.createElement('li');
+            li.textContent = task;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                deleteTask(index);
+            });
+            li.appendChild(deleteBtn);
+            taskList.appendChild(li);
+        });
+    }
+
+    // Function to add a task
+    function addTask() {
+        const task = taskInput.value.trim();
+        if (task !== '') {
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            taskInput.value = '';
+            renderTasks();
+        }
+    }
+
+    // Function to delete a task
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+    }
+
+    // Event listeners
+    addTaskBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addTask();
+        }
+    });
+
+    // Initial render
+    renderTasks();
+});
+
